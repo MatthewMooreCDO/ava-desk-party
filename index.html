@@ -53,8 +53,9 @@ button:active{transform:scale(.96)}
 @keyframes fadein{to{opacity:1}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @media (prefers-reduced-motion:reduce){.sp-title .w{animation-duration:.01s}.sp-sub{animation:fadein .3s .3s forwards}}
-.fs{display:none}
-.can-fs:not(.is-fs) .fs{display:inline-flex}
+.btn.fs,.btn.fs-exit{display:none}
+.can-fs:not(.is-fs) .btn.fs{display:inline-flex}
+.is-fs .btn.fs-exit{display:inline-flex}
 
 /* ---------- header ---------- */
 .top{max-width:1400px;margin:0 auto 10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -200,7 +201,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 
 <header class="top">
   <div class="brand"><div class="mark" aria-hidden="true">AVA</div><h1>Ava's Desk Party<small>Paint your desk any way you like</small></h1></div>
-  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn small fs" id="fsBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Full screen</button>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn small fs" id="fsBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Full screen</button><button class="btn small fs-exit" id="fsExitBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>Exit full screen</button>
   <div class="mode" role="group" aria-label="Light or dark">
     <button type="button" id="modeLight" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>Light</button>
     <button type="button" id="modeDark" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>Dark</button>
@@ -537,6 +538,8 @@ function goFullscreen(){try{const r=fsEl.requestFullscreen?fsEl.requestFullscree
 function syncFs(){document.body.classList.toggle('can-fs',fsSupported);document.body.classList.toggle('is-fs',isFs())}
 document.addEventListener('fullscreenchange',syncFs);document.addEventListener('webkitfullscreenchange',syncFs);syncFs();
 document.getElementById('fsBtn').addEventListener('click',goFullscreen);
+function exitFullscreen(){try{const r=document.exitFullscreen?document.exitFullscreen():document.webkitExitFullscreen&&document.webkitExitFullscreen();if(r&&r.catch)r.catch(()=>{})}catch(e){}}
+document.getElementById('fsExitBtn').addEventListener('click',exitFullscreen);
 let partyT=0;
 function endSplash(){if(splashDone)return;splashDone=true;if(fsSupported)goFullscreen();clearInterval(partyT);splash.classList.add('out');setTimeout(()=>splash.remove(),700)}
 const confCv=document.getElementById('confetti');
